@@ -27,15 +27,15 @@ app.post(`/bot${'7521815863:AAHTBSNrHqpLxG6yqYRLTk2QSDGbHdZTpAw'}`, async (req, 
 
         try {
             if (userMessage?.startsWith('/start')) {
-                await bot.sendMessage(chatId, "Hello, I am your bot!");
+                await bot.sendMessage(772457382, "Hello, I am your bot!");
             } else {
                 // const aiResponse = await getAIResponse(userMessage);
                 // console.log(aiResponse)
-                await bot.sendMessage(chatId, "Hello bro");
+                await bot.sendMessage(772457382, "Hello bro");
             }
         } catch (error) {
             console.error('Error:', error);
-            await bot.sendMessage(chatId, "Sorry, there was an error processing your request.");
+            await bot.sendMessage(772457382, "Sorry, there was an error processing your request.");
         }
     }
 
