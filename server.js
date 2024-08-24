@@ -22,11 +22,11 @@ app.post(`/bot${'7521815863:AAHTBSNrHqpLxG6yqYRLTk2QSDGbHdZTpAw'}`, async (req, 
     console.log(update)
 
     if (update) {
-        const chatId = update?.message?.chat?.id;
-        const userMessage = update?.message?.text;
+        const chatId = update?.chat?.id;
+        const userMessage = update?.text;
 
         try {
-            if (userMessage.startsWith('/start')) {
+            if (userMessage?.startsWith('/start')) {
                 await bot.sendMessage(chatId, "Hello, I am your bot!");
             } else {
                 const aiResponse = await getAIResponse(userMessage);
@@ -53,17 +53,17 @@ const limiter = new Bottleneck({
 const limitedGetAIResponse = limiter.wrap(getAIResponse);
 
 // Use this limited function in your bot
-bot.on('message', async (msg) => {
-    const chatId = msg.chat.id;
-    const userQuestion = msg.text;
+// bot.on('message', async (msg) => {
+//     const chatId = msg.chat.id;
+//     const userQuestion = msg.text;
 
-    if (!userQuestion?.startsWith('/start')) {
-        const aiResponse = await limitedGetAIResponse(userQuestion);
-        bot.sendMessage(chatId, aiResponse);
-    } else {
-        bot.sendMessage(chatId, "Hi i am bot");
-    }
-});
+//     if (!userQuestion?.startsWith('/start')) {
+//         const aiResponse = await limitedGetAIResponse(userQuestion);
+//         bot.sendMessage(chatId, aiResponse);
+//     } else {
+//         bot.sendMessage(chatId, "Hi i am bot");
+//     }
+// });
 
 // Function to get AI response
 async function getAIResponse(question) {
