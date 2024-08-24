@@ -22,7 +22,7 @@ app.post(`/bot${'7521815863:AAHTBSNrHqpLxG6yqYRLTk2QSDGbHdZTpAw'}`, async (req, 
     console.log(update)
 
     if (update) {
-        const chatId = update.message.chat.id;
+        const chatId = update.chat.id;
         const userMessage = update.text;
 
         try {
@@ -30,6 +30,7 @@ app.post(`/bot${'7521815863:AAHTBSNrHqpLxG6yqYRLTk2QSDGbHdZTpAw'}`, async (req, 
                 await bot.sendMessage(chatId, "Hello, I am your bot!");
             } else {
                 const aiResponse = await getAIResponse(userMessage);
+                console.log(aiResponse)
                 await bot.sendMessage(chatId, aiResponse);
             }
         } catch (error) {
