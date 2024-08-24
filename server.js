@@ -18,6 +18,8 @@ app.use(bodyParser.json());
 // Handle webhook updates
 app.post(`/bot${'7521815863:AAHTBSNrHqpLxG6yqYRLTk2QSDGbHdZTpAw'}`, async (req, res) => {
     const update = req.body;
+
+    console.log(update)
     
     if (update.message) {
         const chatId = update.message.chat.id;
