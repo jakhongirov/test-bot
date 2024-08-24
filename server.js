@@ -20,7 +20,7 @@ app.post(`/bot${'7521815863:AAHTBSNrHqpLxG6yqYRLTk2QSDGbHdZTpAw'}`, async (req, 
     const update = req.body;
 
     console.log(update)
-    
+
     if (update.message) {
         const chatId = update.message.chat.id;
         const userMessage = update.message.text;
@@ -39,6 +39,29 @@ app.post(`/bot${'7521815863:AAHTBSNrHqpLxG6yqYRLTk2QSDGbHdZTpAw'}`, async (req, 
     }
 
     res.sendStatus(200);
+});
+
+const Bottleneck = require('bottleneck');
+
+// Create a limiter with the desired rate limits
+const limiter = new Bottleneck({
+    minTime: 1100, // 1.1 seconds between requests (adjust based on your API rate limit)
+});
+
+// Wrap the getAIResponse function with the limiter
+const limitedGetAIResponse = limiter.wrap(getAIResponse);
+
+// Use this limited function in your bot
+bot.on('message', async (msg) => {
+    const chatId = msg.chat.id;
+    const userQuestion = msg.text;
+
+    if (!userQuestion?.startsWith('/start')) {
+        const aiResponse = await limitedGetAIResponse(userQuestion);
+        bot.sendMessage(chatId, aiResponse);
+    } else {
+        bot.sendMessage(chatId, "Hi i am bot");
+    }
 });
 
 // Function to get AI response
