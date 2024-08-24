@@ -29,9 +29,9 @@ app.post(`/bot${'7521815863:AAHTBSNrHqpLxG6yqYRLTk2QSDGbHdZTpAw'}`, async (req, 
             if (userMessage?.startsWith('/start')) {
                 await bot.sendMessage(chatId, "Hello, I am your bot!");
             } else {
-                const aiResponse = await getAIResponse(userMessage);
-                console.log(aiResponse)
-                await bot.sendMessage(chatId, aiResponse);
+                // const aiResponse = await getAIResponse(userMessage);
+                // console.log(aiResponse)
+                await bot.sendMessage(chatId, "Hello bro");
             }
         } catch (error) {
             console.error('Error:', error);
