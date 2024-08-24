@@ -39,6 +39,29 @@ app.post(`/bot${'7521815863:AAHTBSNrHqpLxG6yqYRLTk2QSDGbHdZTpAw'}`, async (req, 
     res.sendStatus(200);
 });
 
+// Function to get AI response
+async function getAIResponse(question) {
+    try {
+        const response = await axios.post(
+            'https://api.openai.com/v1/chat/completions',
+            {
+                model: 'gpt-4',
+                messages: [{ role: 'user', content: question }],
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${process.env.AI_TOKEN}`,
+                },
+            }
+        );
+
+        return response.data.choices[0].message.content;
+    } catch (error) {
+        console.error('AI API Error:', error);
+        throw new Error('Failed to get response from AI.');
+    }
+}
 
 // Start the server
 const PORT = process.env.PORT || 3000;
