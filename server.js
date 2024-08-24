@@ -22,8 +22,8 @@ app.post(`/bot${'7521815863:AAHTBSNrHqpLxG6yqYRLTk2QSDGbHdZTpAw'}`, async (req, 
     console.log(update)
 
     if (update) {
-        const chatId = update.chat.id;
-        const userMessage = update.text;
+        const chatId = update?.message?.chat?.id;
+        const userMessage = update?.message?.text;
 
         try {
             if (userMessage.startsWith('/start')) {
