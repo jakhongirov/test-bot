@@ -89,8 +89,12 @@ async function getAIResponse(question) {
     }
 }
 
+app.get('/', (req, res) => {
+    res.send('ok')
+})
+
 // Start the server
-const PORT = process.env.PORT || 5060;
+const PORT = 5060;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
