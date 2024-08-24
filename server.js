@@ -8,7 +8,7 @@ const axios = require('axios');
 const bot = new TelegramBot('7521815863:AAHTBSNrHqpLxG6yqYRLTk2QSDGbHdZTpAw');
 
 // Set webhook
-const webhookUrl = `https://test-bot-1-8j7z.onrender.com/bot${'7521815863:AAHTBSNrHqpLxG6yqYRLTk2QSDGbHdZTpAw'}`;
+const webhookUrl = `https://webhook.qiblah.app/bot${'7521815863:AAHTBSNrHqpLxG6yqYRLTk2QSDGbHdZTpAw'}`;
 bot.setWebHook(webhookUrl);
 
 // Create an Express server
