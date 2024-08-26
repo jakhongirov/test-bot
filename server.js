@@ -15,42 +15,31 @@ bot.setWebHook(webhookUrl);
 const app = express();
 app.use(bodyParser.json());
 
-// Handle webhook updates
 app.post(`/bot${process.env.BOT_TOKEN}`, async (req, res) => {
     const update = req.body;
 
     console.log(update);
 
-    // Check for business_message
     if (update && update.business_message) {
         const chatId = update.business_message.chat.id;
+        const businessConnectionId = update.business_message.business_connection_id;
         const userMessage = update.business_message.text;
 
         try {
             if (userMessage?.startsWith('/start')) {
-                await bot.sendMessage(chatId, "Hello, I am your business bot!");
+                await bot.sendMessage(chatId, "Hello, I am your business bot!", {
+                    business_connection_id: businessConnectionId
+                });
             } else {
-                await bot.sendMessage(chatId, "Business bot response: Hello!");
+                await bot.sendMessage(chatId, "Business bot response: Hello!", {
+                    business_connection_id: businessConnectionId
+                });
             }
         } catch (error) {
             console.error('Error:', error);
-            await bot.sendMessage(chatId, "Sorry, there was an error processing your request.");
-        }
-
-        // Check for standard message
-    } else if (update && update.message) {
-        const chatId = update.message.chat.id;
-        const userMessage = update.message.text;
-
-        try {
-            if (userMessage?.startsWith('/start')) {
-                await bot.sendMessage(chatId, "Hello, I am your bot!");
-            } else {
-                await bot.sendMessage(chatId, "Hello from your bot!");
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            await bot.sendMessage(chatId, "Sorry, there was an error processing your request.");
+            await bot.sendMessage(chatId, "Sorry, there was an error processing your request.", {
+                business_connection_id: businessConnectionId
+            });
         }
     }
 
