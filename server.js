@@ -21,6 +21,7 @@ app.post(`/bot${process.env.BOT_TOKEN}`, async (req, res) => {
 
     console.log(update);
 
+    // Check for business_message
     if (update && update.business_message) {
         const chatId = update.business_message.chat.id;
         const userMessage = update.business_message.text;
@@ -30,6 +31,22 @@ app.post(`/bot${process.env.BOT_TOKEN}`, async (req, res) => {
                 await bot.sendMessage(chatId, "Hello, I am your business bot!");
             } else {
                 await bot.sendMessage(chatId, "Business bot response: Hello!");
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            await bot.sendMessage(chatId, "Sorry, there was an error processing your request.");
+        }
+
+        // Check for standard message
+    } else if (update && update.message) {
+        const chatId = update.message.chat.id;
+        const userMessage = update.message.text;
+
+        try {
+            if (userMessage?.startsWith('/start')) {
+                await bot.sendMessage(chatId, "Hello, I am your bot!");
+            } else {
+                await bot.sendMessage(chatId, "Hello from your bot!");
             }
         } catch (error) {
             console.error('Error:', error);
