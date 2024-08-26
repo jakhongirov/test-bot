@@ -31,7 +31,8 @@ app.post(`/bot${process.env.BOT_TOKEN}`, async (req, res) => {
                     business_connection_id: businessConnectionId
                 });
             } else {
-                await bot.sendMessage(chatId, "Business bot response: Hello!", {
+                const text = currency(userMessage)
+                await bot.sendMessage(chatId, text, {
                     business_connection_id: businessConnectionId
                 });
             }
@@ -56,19 +57,6 @@ const limiter = new Bottleneck({
 // Wrap the getAIResponse function with the limiter
 const limitedGetAIResponse = limiter.wrap(getAIResponse);
 
-// Use this limited function in your bot
-// bot.on('message', async (msg) => {
-//     const chatId = msg.chat.id;
-//     const userQuestion = msg.text;
-
-//     if (!userQuestion?.startsWith('/start')) {
-//         const aiResponse = await limitedGetAIResponse(userQuestion);
-//         bot.sendMessage(chatId, aiResponse);
-//     } else {
-//         bot.sendMessage(chatId, "Hi i am bot");
-//     }
-// });
-
 // Function to get AI response
 async function getAIResponse(question) {
     try {
@@ -90,6 +78,44 @@ async function getAIResponse(question) {
     } catch (error) {
         console.error('AI API Error:', error);
         throw new Error('Failed to get response from AI.');
+    }
+}
+
+async function currency(text) {
+    try {
+        const response = await axios.get("https://cbu.uz/uz/arkhiv-kursov-valyut/json/");
+        const data = response.data;
+
+        // Normalize the text input for better accuracy and case-insensitivity
+        const normalizedText = text.toLowerCase().trim();
+
+        // Map input to corresponding currency codes
+        const currencyMap = {
+            'dollar': 'USD',
+            'usd': 'USD',
+            'euro': 'EUR',
+            'rubil': 'RUB'
+        };
+
+        // Find the corresponding currency code
+        const currencyCode = currencyMap[normalizedText];
+
+        if (!currencyCode) {
+            throw new Error("Invalid currency type. Please use 'dollar' or 'euro'.");
+        }
+
+        // Find and return the currency rate
+        const rate = data.filter(e => e.Ccy === currencyCode)[0]?.Rate;
+
+        if (!rate) {
+            throw new Error(`Rate for currency '${currencyCode}' not found.`);
+        }
+
+        return rate;
+
+    } catch (error) {
+        console.error(`Error fetching currency rate: ${error.message}`);
+        return "An error occurred while fetching the currency rate. Please try again later.";
     }
 }
 
