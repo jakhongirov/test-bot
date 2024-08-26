@@ -16,26 +16,24 @@ const app = express();
 app.use(bodyParser.json());
 
 // Handle webhook updates
-app.post(`/bot${'7521815863:AAHTBSNrHqpLxG6yqYRLTk2QSDGbHdZTpAw'}`, async (req, res) => {
+app.post(`/bot${process.env.BOT_TOKEN}`, async (req, res) => {
     const update = req.body;
 
-    console.log(update)
+    console.log(update);
 
-    if (update) {
-        const chatId = update?.chat?.id;
-        const userMessage = update?.text;
+    if (update && update.business_message) {
+        const chatId = update.business_message.chat.id;
+        const userMessage = update.business_message.text;
 
         try {
             if (userMessage?.startsWith('/start')) {
-                await bot.sendMessage(772457382, "Hello, I am your bot!");
+                await bot.sendMessage(chatId, "Hello, I am your business bot!");
             } else {
-                // const aiResponse = await getAIResponse(userMessage);
-                // console.log(aiResponse)
-                await bot.sendMessage(772457382, "Hello bro");
+                await bot.sendMessage(chatId, "Business bot response: Hello!");
             }
         } catch (error) {
             console.error('Error:', error);
-            await bot.sendMessage(772457382, "Sorry, there was an error processing your request.");
+            await bot.sendMessage(chatId, "Sorry, there was an error processing your request.");
         }
     }
 
