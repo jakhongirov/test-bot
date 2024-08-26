@@ -31,7 +31,7 @@ app.post(`/bot${process.env.BOT_TOKEN}`, async (req, res) => {
                     business_connection_id: businessConnectionId
                 });
             } else {
-                const text = currency(userMessage)
+                const text = await currency(userMessage)
                 await bot.sendMessage(chatId, text, {
                     business_connection_id: businessConnectionId
                 });
