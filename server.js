@@ -20,7 +20,7 @@ app.post(`/bot${process.env.BOT_TOKEN}`, async (req, res) => {
 
     console.log(update);
 
-    if (update && update.business_message) {
+    if (update && update.business_message && update?.business_message?.from?.id != 634041736) {
         const chatId = update.business_message.chat.id;
         const businessConnectionId = update.business_message.business_connection_id;
         const userMessage = update.business_message.text;
@@ -31,7 +31,7 @@ app.post(`/bot${process.env.BOT_TOKEN}`, async (req, res) => {
                     business_connection_id: businessConnectionId
                 });
             } else {
-                const text = await weather(userMessage)
+                const text = await getAIResponse(userMessage)
                 await bot.sendMessage(chatId, text, {
                     business_connection_id: businessConnectionId
                 });
