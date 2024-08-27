@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const TelegramBot = require('node-telegram-bot-api');
-const { getAIResponse, currency } = require('./lib/functions')
+const { getAIResponse, currency, weather } = require('./lib/functions')
 
 // Initialize the bot
 const bot = new TelegramBot('7521815863:AAHTBSNrHqpLxG6yqYRLTk2QSDGbHdZTpAw');
