@@ -5,7 +5,12 @@ const TelegramBot = require('node-telegram-bot-api');
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
-const { getAIResponse, currency, weather, transcribeAudio } = require('./lib/functions')
+const {
+    getAIResponse,
+    currency, weather,
+    transcribeAudio,
+    transcribeWithWhisper
+} = require('./lib/functions')
 
 // Initialize the bot
 const bot = new TelegramBot(process.env.BOT_TOKEN);
@@ -44,7 +49,7 @@ app.post(`/bot${process.env.BOT_TOKEN}`, async (req, res) => {
 
                 response.data.on('end', async () => {
                     console.log('Voice file downloaded successfully');
-                    const text = await transcribeAudio(filePath);
+                    const text = await transcribeWithWhisper(filePath);
                     bot.sendMessage(chatId, `Transcription: ${text}`, {
                         business_connection_id: businessConnectionId
                     });
