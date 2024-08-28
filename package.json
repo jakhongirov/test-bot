@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@google-cloud/speech": "^6.7.0",
     "axios": "^1.7.4",
     "bottleneck": "^2.19.5",
     "dotenv": "^16.4.5",
