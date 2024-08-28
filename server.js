@@ -5,10 +5,10 @@ const TelegramBot = require('node-telegram-bot-api');
 const { getAIResponse, currency, weather } = require('./lib/functions')
 
 // Initialize the bot
-const bot = new TelegramBot('7521815863:AAHTBSNrHqpLxG6yqYRLTk2QSDGbHdZTpAw');
+const bot = new TelegramBot(process.env.BOT_TOKEN);
 
 // Set webhook
-const webhookUrl = `https://webhook.qiblah.app/bot${'7521815863:AAHTBSNrHqpLxG6yqYRLTk2QSDGbHdZTpAw'}`;
+const webhookUrl = `https://webhook.qiblah.app/bot${process.env.BOT_TOKEN}`;
 bot.setWebHook(webhookUrl);
 
 // Create an Express server
@@ -31,7 +31,7 @@ app.post(`/bot${process.env.BOT_TOKEN}`, async (req, res) => {
                     business_connection_id: businessConnectionId
                 });
             } else {
-                const text = await getAIResponse(userMessage)
+                const text = "test"
                 await bot.sendMessage(chatId, text, {
                     business_connection_id: businessConnectionId
                 });
