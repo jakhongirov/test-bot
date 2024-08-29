@@ -53,11 +53,15 @@ app.post(`/bot${process.env.BOT_TOKEN}`, async (req, res) => {
                     bot.sendMessage(chatId, `Transcription: ${text}`, {
                         business_connection_id: businessConnectionId
                     });
+                    const answer = await getAIResponse(text)
+                    bot.sendMessage(chatId, answer, {
+                        business_connection_id: businessConnectionId
+                    });
                 })
 
             } else {
-                const text = "test"
-                await bot.sendMessage(chatId, text, {
+                const answer = await getAIResponse(userMessage)
+                bot.sendMessage(chatId, answer, {
                     business_connection_id: businessConnectionId
                 });
             }
