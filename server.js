@@ -60,9 +60,22 @@ app.post(`/bot${process.env.BOT_TOKEN}`, async (req, res) => {
                 })
 
             } else {
-                const answer = await getAIResponse(userMessage)
-                bot.sendMessage(chatId, answer, {
-                    business_connection_id: businessConnectionId
+                // const answer = await getAIResponse(userMessage)
+                bot.sendMessage(chatId, "Keys", {
+                    business_connection_id: businessConnectionId,
+                    reply_markup: {
+                        keyboard: [
+                            {
+                                text: "Hello"
+                            }
+                        ],
+                        inline_keyboard: [
+                            {
+                                text: "Hi",
+                                callback_data: "hi"
+                            }
+                        ]
+                    }
                 });
             }
         } catch (error) {
