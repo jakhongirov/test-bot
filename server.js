@@ -34,14 +34,6 @@ app.post(`/bot${process.env.BOT_TOKEN}`, async (req, res) => {
         const businessConnectionId = update.business_message.business_connection_id;
         const userMessage = update.business_message.text;
         const userVoiceMessage = update.business_message.voice;
-        const messageDate = update.business_message.date; // Unix timestamp of the message
-        const currentTime = Math.floor(Date.now() / 1000); // Current time in Unix timestamp
-
-        // Ignore messages older than 5 minutes (300 seconds)
-        if (currentTime - messageDate > 300) {
-            console.log('Ignoring old message');
-            return res.sendStatus(200);
-        }
 
         try {
             if (userMessage?.startsWith('/start')) {
@@ -77,14 +69,6 @@ app.post(`/bot${process.env.BOT_TOKEN}`, async (req, res) => {
                                 }
                             ]
                         ],
-                        inline_keyboard: [
-                            [
-                                {
-                                    text: "Hi",
-                                    callback_data: "hi"
-                                }
-                            ]
-                        ],
                         resize_keyboard: true
                     }
                 });
@@ -99,7 +83,6 @@ app.post(`/bot${process.env.BOT_TOKEN}`, async (req, res) => {
 
     res.sendStatus(200);
 });
-
 
 app.get('/', (req, res) => {
     res.send('ok')
