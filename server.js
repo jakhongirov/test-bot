@@ -62,14 +62,18 @@ app.post(`/bot${process.env.BOT_TOKEN}`, async (req, res) => {
                 bot.sendMessage(chatId, "Keys", {
                     business_connection_id: businessConnectionId,
                     reply_markup: {
-                        keyboard: [
+                        inline_keyboard: [
                             [
                                 {
-                                    text: "Hello"
-                                }
+                                    text: "Hi",
+                                    callback_data: "hi"
+                                },
+                                {
+                                    text: "What's up",
+                                    callback_data: "whats_up"
+                                },
                             ]
-                        ],
-                        resize_keyboard: true
+                        ]
                     }
                 });
             }
