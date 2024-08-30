@@ -28,11 +28,20 @@ app.post(`/bot${process.env.BOT_TOKEN}`, async (req, res) => {
 
     console.log(update);
 
+    // Check for valid update and exclude messages from a specific user
     if (update && update.business_message && update?.business_message?.from?.id != 634041736) {
         const chatId = update.business_message.chat.id;
         const businessConnectionId = update.business_message.business_connection_id;
         const userMessage = update.business_message.text;
         const userVoiceMessage = update.business_message.voice;
+        const messageDate = update.business_message.date; // Unix timestamp of the message
+        const currentTime = Math.floor(Date.now() / 1000); // Current time in Unix timestamp
+
+        // Ignore messages older than 5 minutes (300 seconds)
+        if (currentTime - messageDate > 300) {
+            console.log('Ignoring old message');
+            return res.sendStatus(200);
+        }
 
         try {
             if (userMessage?.startsWith('/start')) {
@@ -40,8 +49,7 @@ app.post(`/bot${process.env.BOT_TOKEN}`, async (req, res) => {
                     business_connection_id: businessConnectionId
                 });
             } else if (userVoiceMessage) {
-
-                const fileId = userVoiceMessage?.file_id
+                const fileId = userVoiceMessage?.file_id;
                 const fileUrl = await bot.getFileLink(fileId);
                 const filePath = path.join(__dirname, `voice_${chatId}.ogg`);
                 const response = await axios.get(fileUrl, { responseType: 'stream' });
@@ -53,28 +61,31 @@ app.post(`/bot${process.env.BOT_TOKEN}`, async (req, res) => {
                     bot.sendMessage(chatId, `Transcription: ${text}`, {
                         business_connection_id: businessConnectionId
                     });
-                    const answer = await getAIResponse(text)
+                    const answer = await getAIResponse(text);
                     bot.sendMessage(chatId, answer, {
                         business_connection_id: businessConnectionId
                     });
-                })
-
+                });
             } else {
-                // const answer = await getAIResponse(userMessage)
                 bot.sendMessage(chatId, "Keys", {
                     business_connection_id: businessConnectionId,
                     reply_markup: {
                         keyboard: [
-                            {
-                                text: "Hello"
-                            }
+                            [
+                                {
+                                    text: "Hello"
+                                }
+                            ]
                         ],
                         inline_keyboard: [
-                            {
-                                text: "Hi",
-                                callback_data: "hi"
-                            }
-                        ]
+                            [
+                                {
+                                    text: "Hi",
+                                    callback_data: "hi"
+                                }
+                            ]
+                        ],
+                        resize_keyboard: true
                     }
                 });
             }
