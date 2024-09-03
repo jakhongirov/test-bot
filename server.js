@@ -13,6 +13,9 @@ const {
     getSheetData
 } = require('./lib/functions')
 
+const CREDENTIALS_PATH = path.resolve(__dirname, "./sheet.json");
+const TOKEN_PATH = path.resolve(__dirname, "./token.json");
+
 // Initialize the bot
 const bot = new TelegramBot(process.env.BOT_TOKEN);
 
@@ -127,31 +130,26 @@ app.post(`/bot${process.env.BOT_TOKEN}`, async (req, res) => {
 app.get('/oauth2callback', async (req, res) => {
     const code = req.query.code;
     if (!code) {
-        return res.status(400).send('Missing authorization code');
+        return res.status(400).send('Authorization code is missing.');
     }
 
-    console.log(code)
-
     try {
-        const CREDENTIALS_PATH = path.resolve(__dirname, "./sheet.json");
-        const TOKEN_PATH = path.resolve(__dirname, "./token.json");
-
         const credentials = JSON.parse(fs.readFileSync(CREDENTIALS_PATH));
         const { client_secret, client_id, redirect_uris } = credentials.web;
         const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
 
+        // Exchange authorization code for tokens
         const tokenResponse = await oAuth2Client.getToken(code);
-        const token = tokenResponse.tokens;
-        oAuth2Client.setCredentials(token);
+        const tokens = tokenResponse.tokens;
 
-        // Save the token for future use
-        fs.writeFileSync(TOKEN_PATH, JSON.stringify(token));
-        console.log('Token stored to', TOKEN_PATH);
+        // Store the tokens for future use
+        fs.writeFileSync(TOKEN_PATH, JSON.stringify(tokens));
+        console.log('Tokens stored to', TOKEN_PATH);
 
-        res.send('Authentication successful! You can now use the bot.');
+        res.send('Authentication successful! You can now close this page.');
     } catch (error) {
-        console.error('Error during OAuth callback:', error);
-        res.status(500).send('Error during authentication');
+        console.error('Error exchanging authorization code for tokens:', error);
+        res.status(500).send('Error during token exchange.');
     }
 });
 
