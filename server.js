@@ -129,6 +129,7 @@ app.post(`/bot${process.env.BOT_TOKEN}`, async (req, res) => {
 
 app.get('/oauth2callback', async (req, res) => {
     const code = req.query.code;
+    console.log("Authorization code received:", code);  // Add this line to check if the code is received
 
     if (!code) {
         return res.status(400).send('Authorization code is missing.');
