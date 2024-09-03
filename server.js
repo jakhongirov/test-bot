@@ -100,6 +100,7 @@ app.post(`/bot${process.env.BOT_TOKEN}`, async (req, res) => {
 
         try {
             const data = await getSheetData();
+            console.log(data)
             let response = 'Sorry, I couldn’t find what you are looking for.';
             data.forEach(row => {
                 if (userMessage.includes(row[0].toLowerCase())) { // Assuming first column has product names
