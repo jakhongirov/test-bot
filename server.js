@@ -99,14 +99,14 @@ app.post(`/bot${process.env.BOT_TOKEN}`, async (req, res) => {
         const userMessage = update.business_message.text;
 
         try {
-            const data = await getSheetData();
-            console.log(data)
+            // const data = await getSheetData();
+            // console.log(data)
             let response = 'Sorry, I couldn’t find what you are looking for.';
-            data.forEach(row => {
-                if (userMessage.includes(row[0].toLowerCase())) { // Assuming first column has product names
-                    response = `Name: ${row[0]}\nPhone: ${row[1]}`; // Assuming second column has prices
-                }
-            });
+            // data.forEach(row => {
+            //     if (userMessage.includes(row[0].toLowerCase())) { // Assuming first column has product names
+            //         response = `Name: ${row[0]}\nPhone: ${row[1]}`; // Assuming second column has prices
+            //     }
+            // });
 
             // Send the response back to the user
             bot.sendMessage(chatId, response, {
