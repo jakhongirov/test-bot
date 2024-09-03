@@ -130,8 +130,9 @@ app.get('/oauth2callback', async (req, res) => {
         return res.status(400).send('Missing authorization code');
     }
 
-    try {
+    console.log(code)
 
+    try {
         const CREDENTIALS_PATH = path.resolve(__dirname, "./sheet.json");
         const TOKEN_PATH = path.resolve(__dirname, "./token.json");
 
