@@ -124,15 +124,39 @@ app.post(`/bot${process.env.BOT_TOKEN}`, async (req, res) => {
     res.sendStatus(200);
 })
 
+app.get('/oauth2callback', async (req, res) => {
+    const code = req.query.code;
+    if (!code) {
+        return res.status(400).send('Missing authorization code');
+    }
+
+    try {
+
+        const CREDENTIALS_PATH = path.resolve(__dirname, "./sheet.json");
+        const TOKEN_PATH = path.resolve(__dirname, "./token.json");
+
+        const credentials = JSON.parse(fs.readFileSync(CREDENTIALS_PATH));
+        const { client_secret, client_id, redirect_uris } = credentials.web;
+        const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
+
+        const tokenResponse = await oAuth2Client.getToken(code);
+        const token = tokenResponse.tokens;
+        oAuth2Client.setCredentials(token);
+
+        // Save the token for future use
+        fs.writeFileSync(TOKEN_PATH, JSON.stringify(token));
+        console.log('Token stored to', TOKEN_PATH);
+
+        res.send('Authentication successful! You can now use the bot.');
+    } catch (error) {
+        console.error('Error during OAuth callback:', error);
+        res.status(500).send('Error during authentication');
+    }
+});
+
 app.get('/', (req, res) => {
     res.send('ok')
 })
-
-app.get('/oauth2callback', (req, res) => {
-    const authorizationCode = req.query.code;
-    // Exchange this code for tokens and continue with the authentication process
-    res.send('OAuth callback received!');
-});
 
 // Start the server
 const PORT = 5060;
