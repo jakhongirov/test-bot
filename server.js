@@ -120,6 +120,7 @@ app.post(`/bot${process.env.BOT_TOKEN}`, async (req, res) => {
         }
     }
 
+    res.sendStatus(200);
 })
 
 app.get('/', (req, res) => {
