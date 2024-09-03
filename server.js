@@ -129,6 +129,7 @@ app.post(`/bot${process.env.BOT_TOKEN}`, async (req, res) => {
 
 app.get('/oauth2callback', async (req, res) => {
     const code = req.query.code;
+
     if (!code) {
         return res.status(400).send('Authorization code is missing.');
     }
@@ -139,17 +140,17 @@ app.get('/oauth2callback', async (req, res) => {
         const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
 
         // Exchange authorization code for tokens
-        const tokenResponse = await oAuth2Client.getToken(code);
-        const tokens = tokenResponse.tokens;
+        const { tokens } = await oAuth2Client.getToken(code);
+        oAuth2Client.setCredentials(tokens);
 
-        // Store the tokens for future use
+        // Save the tokens to a file
         fs.writeFileSync(TOKEN_PATH, JSON.stringify(tokens));
-        console.log('Tokens stored to', TOKEN_PATH);
+        console.log("Tokens stored successfully in", TOKEN_PATH);
 
-        res.send('Authentication successful! You can now close this page.');
+        res.send('Authentication successful! You can close this page.');
     } catch (error) {
-        console.error('Error exchanging authorization code for tokens:', error);
-        res.status(500).send('Error during token exchange.');
+        console.error("Error during token exchange:", error);
+        res.status(500).send("Token exchange failed.");
     }
 });
 
