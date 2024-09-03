@@ -108,7 +108,7 @@ app.post(`/bot${process.env.BOT_TOKEN}`, async (req, res) => {
             console.log(data)
             let response = 'Sorry, I couldn’t find what you are looking for.';
             data.forEach(row => {
-                if (userMessage.includes(row[0].toLowerCase())) { // Assuming first column has product names
+                if (userMessage.toLowerCase().includes(row[0].toLowerCase())) { // Assuming first column has product names
                     response = `Name: ${row[0]}\nPhone: ${row[1]}`; // Assuming second column has prices
                 }
             });
@@ -131,7 +131,7 @@ app.post(`/bot${process.env.BOT_TOKEN}`, async (req, res) => {
 
 app.get('/oauth2callback', async (req, res) => {
     const code = req.query.code;
-    console.log("Authorization code received:", code);  // Add this line to check if the code is received
+    console.log("Authorization code received:", code);
 
     if (!code) {
         return res.status(400).send('Authorization code is missing.');
@@ -152,8 +152,9 @@ app.get('/oauth2callback', async (req, res) => {
 
         res.send('Authentication successful! You can close this page.');
     } catch (error) {
-        console.error("Error during token exchange:", error);
-        res.status(500).send("Token exchange failed.");
+        console.error("Error during token exchange:", error.message);
+        console.error("Full error details:", error);
+        res.status(500).send("Token exchange failed. Please check the console for error details.");
     }
 });
 
