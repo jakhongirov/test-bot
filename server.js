@@ -89,7 +89,7 @@ app.use(bodyParser.json());
 //     res.sendStatus(200);
 // });
 
-app.post(`/bot${process.env.BOT_TOKEN}`, async () => {
+app.post(`/bot${process.env.BOT_TOKEN}`, async (req, res) => {
     const update = req.body;
     console.log(update)
 
